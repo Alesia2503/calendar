@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Календарь</title>
+</head>
+<style>
+.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 0 200px 0 200px;
+  margin: 0 auto;
+}
+table {
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  margin-right: 10px;
+}
+caption {
+  padding: 10px 0;
+  background-color: #50ed17;
+  border: 1px solid black;
+  border-bottom: none;
+}
+td,
+th {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+  font-size: 18px;
+  background-color: #f3f8dbda;
+}
+td:last-child, td:nth-child(6) {
+  background-color: #f5c0a1da;
+}
+th {
+  font-weight: bold;
+  background-color: #c2ed15;
+}
+</style>
+<body>
+    <div class="container">
+        <div class="item"></div>
+    </div>
+
+  <script>
+    function createCalendar(elem, year, month) {   // elem это тег, в который будем вставлять календарь
+      elem = document.querySelector(elem)
+
+      let mon = month - 1;   //это чтоюы январь был первым месяцем, а декабрь 12
+
+      let d = new Date(year, mon)  //создаем дату (только год и месяц)
+
+      let table = `
+        <table>
+        <caption>${month}.${year}</caotion>
+          <tr>
+            <th>пн</th>
+            <th>вт</th>
+            <th>ср</th>
+            <th>чт</th>
+            <th>пт</th>
+            <th>сб</th>
+            <th>вс</th>
+          </tr>
+          <tr>  
+      `;
+
+      // делаем пустые ячейки в начале
+      for(let i=0; i<getDay(d); i++) {
+        table += '<td></td>'
+      }
+
+      //делаем генератор всех дней
+      while(d.getMonth() == mon) {
+        table += '<td>' + d.getDate() + '</td>'
+        if(getDay(d) % 7 == 6) {
+          table += '</tr><tr>'
+        }
+        d.setDate(d.getDate()+1)
+      }
+      //делаем пустые ячейки в конце
+      if(getDay(d) != 0) {
+        for(let i=getDay(d); i<7; i++) {
+        table += '<td></td>'
+      }
+      }
+
+      table += '</tr></table>';
+
+      elem.insertAdjacentHTML('afterbegin', table);
+    }
+    function getDay(date) {   //делаем, что бы понедельник был первым днем, а воскресенье 7
+      let day = date.getDay();
+      if(day == 0) day = 7;
+      return day - 1;
+    }
+    let i=12;
+    while (i>=1) {
+        createCalendar('.container', 2021, i) 
+        i--
+    }
+    </script>
+</body>
+</html>
